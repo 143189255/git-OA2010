@@ -1,0 +1,32 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.PerssionMapper">
+    <select id="getMenus" resultMap="perssionMap">
+        select DISTINCT t_perssion.* from t_emp_role,t_role,t_role_permission,t_perssion
+where t_emp_role.role_id=t_role.r_id
+and t_role.r_id=t_role_permission.role_id
+and t_role_permission.permission_id=t_perssion.p_id
+and t_emp_role.emp_id=#{empId}
+and t_perssion.p_type='menu'
+and t_perssion.p_delete=0
+    </select>
+    <resultMap id="perssionMap" type="Perssion">
+        <id property="pId" column="p_id"></id>
+        <result property="pIcon" column="p_icon"/>
+        <result property="pName" column="p_name"/>
+        <result property="pParentid" column="p_parentid"/>
+        <result property="pUrl" column="p_url"/>
+        <result property="pType" column="p_type"/>
+        <result property="pDelete" column="p_delete"/>
+    </resultMap>
+    <select id="getPermissions" resultMap="perssionMap">
+         select DISTINCT t_perssion.* from t_emp_role,t_role,t_role_permission,t_perssion
+where t_emp_role.role_id=t_role.r_id
+and t_role.r_id=t_role_permission.role_id
+and t_role_permission.permission_id=t_perssion.p_id
+and t_emp_role.emp_id=#{empId}
+and t_perssion.p_type='permission'
+and t_perssion.p_delete=0
+    </select>
+</mapper>

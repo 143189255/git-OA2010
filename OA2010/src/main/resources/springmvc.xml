@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:tool="http://www.springframework.org/schema/tool"
+
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
+
+<context:component-scan base-package="com.ssm.controller"/>
+
+    <!--配置视图解析器对象-->
+    <bean id = "internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--前缀-->
+        <property name="prefix" value="/WEB-INF/JSP/"/>
+        <!--后缀-->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--上传文件的最大大小，单位为字节 -->
+        <property name="maxUploadSize" value="17367648787"></property>
+
+        <!-- 上传文件的编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>
+    <!--静态资源过滤-->
+    <mvc:default-servlet-handler/>
+    <!--OR-->
+    <!--<mvc:resources mapping="/css/**" location="./media/css"/>-->
+    <!--<mvc:resources mapping="/js/**" location="./media/js"/>-->
+    <!--<mvc:resources mapping="/images/**" location="./media/images"/>-->
+  <!--开启springmvc注解的支持-->
+    <mvc:annotation-driven >
+        <!-- 注册FastJSON -->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+                <property name="features">
+                    <array>
+                        <value>WriteMapNullValue</value>
+                        <value>WriteNullStringAsEmpty</value>
+                    </array>
+                </property>
+            </bean>
+
+        </mvc:message-converters>
+        <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->
+    </mvc:annotation-driven>
+    <!--配置Hibernate-validator和Spring整合-->
+    <!--这里的这个认证器，使用的是spring的-->
+    <bean id=" validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+          <!--要整合的认证器的名字-->
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <!--在认证的时候认证失败的时候的提示信息-->
+          <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+    <bean id = "messageSource"
+           class = "org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="useCodeAsDefaultMessage" value="false"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+    <!-- 开启aop，对类代理 -->
+    <!--<aop:config proxy-target-class="true"></aop:config>-->
+
+    <!--&lt;!&ndash; 开启shiro注解支持 &ndash;&gt;-->
+    <!--<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">-->
+        <!--<property name="securityManager" ref="securityManager" />-->
+    <!--</bean>-->
+
+</beans>

@@ -1,0 +1,19 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.TClassMapper">
+    <select id="getClasses" resultType="TClass">
+        select C.id,C.class_name as 'className' from t_class C where class_delete=0
+    </select>
+    <insert id="addClass">
+        insert into t_class values (null,#{majorId},#{className},#{classDate},#{classTime},#{classAddress},0)
+    </insert>
+    <select id="getAllClass" resultType="TClass">
+        select C.major_id as majorId,C.class_name as className,C.class_date as classDate,C.class_time as classTime,
+         C.class_address as classAddress
+        from t_class C where C.class_delete=0
+    </select>
+    <select id="getTotalCount" resultType="int">
+        select count(id) from t_class where t_class.class_delete=0
+    </select>
+</mapper>

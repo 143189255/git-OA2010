@@ -1,0 +1,9 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.RoleMapper">
+    <select id="getRolesByEmpId" resultType="Role">
+      SELECT r_id as 'rId', r_name as 'rName'  FROM t_emp_role ER inner join t_role R on ER.role_id=R.r_id where ER.emp_id=#{empId}
+    </select>
+
+        </mapper>

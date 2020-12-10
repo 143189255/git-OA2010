@@ -1,0 +1,63 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.EmpMapper">
+
+    <select id="login" resultType="emp">
+        SELECT * FROM t_emp where no=#{no} and pass=#{pass} and del=0
+    </select>
+  <insert id="addEmp" keyProperty="id" useGeneratedKeys="true">
+      insert into t_emp values (null,#{no},'888888',#{name},#{did},1,#{sex},#{email},#{qq},#{phone},#{cratedate},#{photo},0)
+  </insert>
+    <select id="getTotalCount" resultType="int">
+        select count(id) from t_emp where del=0
+    </select>
+    <!--双表联查-->
+    <select id="getEmps" resultMap="empMap">
+       select E.*,D.name as 'dname' from t_emp E inner join t_depart D on E.did=D.id where E.del=0 limit #{pageStart},#{pageSize}
+    </select>
+    <resultMap id="empMap" type="Emp">
+        <id column="id" property="id"></id>
+        <result column="no" property="no"/>
+        <result column="pass" property="pass"/>
+        <result column="name" property="name"/>
+        <result column="did" property="did"/>
+        <result column="flag" property="flag"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="qq" property="qq"/>
+        <result column="phone" property="phone"/>
+        <result column="cratedate" property="cratedate"/>
+        <result column="photo" property="photo"/>
+        <result column="del" property="del"/>
+        <!--关联查询部门表获取部门名称-->
+        <association property="depart" javaType="Depart">
+            <result column="dname" property="name"/>
+        </association>
+    </resultMap>
+    <select id="getData" resultType="com.ssm.utils.TongJi">
+        select count(t_emp.id) as 'value',t_depart.name from t_emp INNER JOIN t_depart on t_emp.did=t_depart.id GROUP BY t_depart.name
+    </select>
+    <update id="updatePhoto">
+        update t_emp set photo=#{photo} where id=#{id}
+    </update>
+    <update id="deleteEmp">
+        update t_emp set del=1 where id=#{id}
+    </update>
+
+    <insert id="addEmpRole">
+        insert into t_emp_role values(null,#{empId},#{rids})
+    </insert>
+    <select id="totalEmp" resultType="int">
+        select count(id) from t_emp
+    </select>
+    <update id="empupdate">
+        update t_emp set no=#{no},pass='888888',name=#{name},did=#{did},flag=1,sex=#{sex},email=#{email},qq=#{qq},phone=#{phone},cratedate=#{cratedate},photo=#{photo},del=0 where id=#{id}
+    </update>
+    <delete id="deleteRoles">
+        delete from t_emp_role where emp_id=#{empid}
+    </delete>
+    <select id="getAllEmpNo" resultType="String">
+        select no from t_emp
+    </select>
+</mapper>
